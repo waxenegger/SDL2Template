@@ -25,7 +25,7 @@ init:
 sdltemplate:	$(OBJS)
 	@echo.
 	@echo Linking Executable ...
-	@$(CXX) $^ -LC:\SDL2-2.0.8\x86_64-w64-mingw32\lib -lmingw32 -lSDL2main -lSDL2 -o $(BIN)
+	@$(CXX) $^ -LC:\SDL2-2.0.8\x86_64-w64-mingw32\lib -lmingw32 -lSDL2main -lSDL2 -mwindows -o $(BIN)
 	@echo Linked Executable: $(BIN)
 
 clean:
