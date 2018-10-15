@@ -1,16 +1,36 @@
-OBJS = src/Main.cpp 
+PROJECT_ROOT = .
 
-CC = g++ 
+SRC = $(PROJECT_ROOT)\src
+SRCS = $(wildcard $(SRC)/*.cpp)
+OBJS = $(SRCS:%.cpp=%.o)
+OUT = $(PROJECT_ROOT)\out
+BIN = $(OUT)\SDL2Template
 
-INCLUDE_PATHS = -IC:\SDL2-2.0.8\x86_64-w64-mingw32\include\SDL2
+CXXFLAGS += -Wall -std=c++11 -std=c++0x
 
-LIBRARY_PATHS = -LC:\SDL2-2.0.8\x86_64-w64-mingw32\lib 
+all:	init sdltemplate
 
-COMPILER_FLAGS = -w -Wl,-subsystem,windows 
+init:
+	@echo.
+	@echo Preparing Output Directory
+	@if not exist $(OUT) mkdir $(OUT)
+	@echo Directory Created
+	@echo.
 
-LINKER_FLAGS = -lmingw32 -lSDL2main -lSDL2 
+%.o:   %.cpp
+	@echo | set /p dummy="Compiling $@ ... "
+	@$(CXX) -c $(CXXFLAGS) -IC:\SDL2-2.0.8\x86_64-w64-mingw32\include\SDL2 -o $@ $<
+	@echo DONE
 
-OBJ_NAME = SDLTemplate
+sdltemplate:	$(OBJS)
+	@echo.
+	@echo Linking Executable ...
+	@$(CXX) $^ -LC:\SDL2-2.0.8\x86_64-w64-mingw32\lib -lmingw32 -lSDL2main -lSDL2 -o $(BIN)
+	@echo Linked Executable: $(BIN)
 
-all: $(OBJS) 
-	$(CC) $(OBJS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(OBJ_NAME)
+clean:
+	@echo.
+	@echo Cleaning ...
+	@if exist $(OUT) rmdir /S /Q $(OUT)
+	@del $(SRC)\*.o 2>NUL
+	@echo Cleaning Finished
